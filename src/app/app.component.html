@@ -2,11 +2,14 @@
 <div class="container">
     <div class="row">
         <div class="col-md-12">
-            <app-recipes *ngIf="ieRecipesTab === 'recipes'; else shoppingList"></app-recipes>
+            <!--It's no longer necessary since we're using Routing now.
+
+                <app-recipes *ngIf="ieRecipesTab === 'recipes'; else shoppingList"></app-recipes>
 
             <ng-template #shoppingList>
                 <app-shopping-list></app-shopping-list>
-            </ng-template>
+            </ng-template>-->
+            <router-outlet></router-outlet>
         </div>
     </div>
 </div>

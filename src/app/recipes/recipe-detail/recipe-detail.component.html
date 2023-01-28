@@ -14,10 +14,10 @@
             <button type="button" class="btn btn-primary dropdown-toggle">Manage Recipe
                 <span class="caret"></span>
             </button>
-            <ul class="dropdown-menu">
-                <li><a (click)="addToShoppingList()" style="cursor: pointer;">to shopig list</a></li>
-                <li><a href="#">Edit recipe</a></li>
-                <li><a href="#">Delete recipe</a></li>
+            <ul class="dropdown-menu" style="cursor: pointer;">
+                <li><a (click)="addToShoppingList()" >to shopig list</a></li>
+                <li><a [routerLink]="['edit']">Edit recipe</a></li>
+                <li><a>Delete recipe</a></li>
             </ul>
         </div>
     </div>

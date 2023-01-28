@@ -19,4 +19,8 @@ export class RecipeService {
     getRecipes() {
         return this.recipes.slice(); /*slice() Not passing the reference, but a copy of recipes*/
     }
+
+    getRecipeById(index: number): Recipe {
+        return this.recipes[index];
+    }
 }
