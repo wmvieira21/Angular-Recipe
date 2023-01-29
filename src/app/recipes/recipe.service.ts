@@ -3,7 +3,8 @@ import { Ingredient } from "../shared/ingredient.module";
 import { Recipe } from "./recipe.module";
 
 export class RecipeService {
-    selectedRecipeService = new EventEmitter<Recipe>();
+    /*No longer neded since we're using routing now
+    selectedRecipeService = new EventEmitter<Recipe>();*/
 
     private recipes: Recipe[] = [
         new Recipe('Nhoque', 'Nhoque good',

@@ -7,9 +7,4 @@ import { Component } from '@angular/core';
 })
 
 export class AppComponent {
-  ieRecipesTab: string = 'recipes';
-
-  onSelectTab(event: { feature: string }) {
-    this.ieRecipesTab = event.feature;
-  }
 }

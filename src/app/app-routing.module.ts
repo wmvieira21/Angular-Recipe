@@ -23,11 +23,9 @@ const appRouter: Routes = [
 
     {
         path: 'shopping-list/edit', component: ShoppingListComponent
-    }/*,
-
-
+    },
     { path: 'not-found', component: ErrorComponent, data: { messageError: 'Page not found' } },
-    { path: '**', redirectTo: '/not-found' }*/
+    { path: '**', redirectTo: '/not-found' }
 ];
 
 

@@ -13,7 +13,8 @@ export class RecipeItemComponent {
   
   constructor(private recipeService: RecipeService) { }
   
-  /*onSelected() {
+  /*No longer neded since we're using routing now
+  onSelected() {
     this.recipeService.selectedRecipeService.emit(this.recipe1);
   }*/
 }
