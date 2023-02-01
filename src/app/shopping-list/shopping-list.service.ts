@@ -6,11 +6,16 @@ import { Ingredient } from "../shared/ingredient.module";
 export class ShoppingListService {
 
     ingredientsChanged = new Subject<Ingredient[]>();
+    ingredientEdit = new Subject<number>();
 
-    private ingredients: Ingredient[] = [];
+    private ingredients: Ingredient[] = [new Ingredient('uva', 10), new Ingredient('laranja', 1)];
 
     getIngredients() {
         return this.ingredients.slice();
+    }
+
+    getIngredient(index: number): Ingredient {
+        return this.ingredients[index];
     }
 
     addIngredient(ingredient: Ingredient) {
@@ -23,6 +28,16 @@ export class ShoppingListService {
             this.ingredients.push(ingredient);
         });*/
         this.ingredients.push(...recipe.ingredients);
+        this.ingredientsChanged.next(this.ingredients.slice());
+    }
+
+    updateIngredient(index: number, newIngredient: Ingredient) {
+        this.ingredients[index] = newIngredient;
+        this.ingredientsChanged.next(this.ingredients.slice());
+    }
+
+    deleteIngredient(index: number) {
+        this.ingredients.splice(0,index);
         this.ingredientsChanged.next(this.ingredients.slice());
     }
 }

@@ -1,4 +1,4 @@
-import { Component, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Ingredient } from "../shared/ingredient.module";
 import { ShoppingListService } from './shopping-list.service';
 
@@ -14,8 +14,13 @@ export class ShoppingListComponent implements OnInit {
 
   ngOnInit(): void {
     this.ingredients = this.shoppingListService.getIngredients();
+
     this.shoppingListService.ingredientsChanged.subscribe((ingredients: Ingredient[]) => {
-      this.ingredients = this.shoppingListService.getIngredients();
+      this.ingredients = ingredients;
     });
+  }
+
+  onEditIngredient(index: number) {
+    this.shoppingListService.ingredientEdit.next(index);
   }
 }
