@@ -14,7 +14,7 @@ export class ShoppingEditComponent implements OnInit {
   @ViewChild('refFormShoppingEdit') refFormShoppingEdit: NgForm;
 
   editMode = false;
-  indexIngredientEdit: number;
+  indexIngredientEdit = null;
 
   constructor(private shoppingListService: ShoppingListService) { }
 
@@ -42,13 +42,20 @@ export class ShoppingEditComponent implements OnInit {
       } else {
         this.shoppingListService.updateIngredient(this.indexIngredientEdit, ingredient);
       }
-      form.reset();
       this.editMode = false;
+      form.reset();
     }
   }
 
-  onDelete(){
+  onDelete() {
     this.shoppingListService.deleteIngredient(this.indexIngredientEdit);
-    this.indexIngredientEdit = null;
+
+    this.editMode = false;
+    this.refFormShoppingEdit.reset();
+  }
+
+  onClear() {
+    this.editMode = false;
+    this.refFormShoppingEdit.reset();
   }
 }
