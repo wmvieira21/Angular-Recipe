@@ -1,10 +1,13 @@
 import { EventEmitter } from "@angular/core";
+import { Subject } from "rxjs";
 import { Ingredient } from "../shared/ingredient.module";
 import { Recipe } from "./recipe.module";
 
 export class RecipeService {
     /*No longer neded since we're using routing now
     selectedRecipeService = new EventEmitter<Recipe>();*/
+
+    recipeChanged = new Subject<Recipe[]>();
 
     private recipes: Recipe[] = [
         new Recipe('Nhoque', 'Nhoque good',
@@ -23,5 +26,19 @@ export class RecipeService {
 
     getRecipeById(index: number): Recipe {
         return this.recipes[index];
+    }
+
+    addRecipe(recipe: Recipe) {
+        this.recipes.push(recipe);
+        this.recipeChanged.next(this.recipes);
+    }
+    updateRecipe(index: number, updatedRecipe: Recipe) {
+        this.recipes[index] = updatedRecipe;
+        this.recipeChanged.next(this.recipes);
+    }
+
+    deleteRecipe(index: number) {
+        this.recipes.splice(index, 1);
+        this.recipeChanged.next(this.recipes);
     }
 }

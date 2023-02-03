@@ -3,15 +3,15 @@
         <form [formGroup]="editRecipeForm" (ngSubmit)="onSubmit()">
             <div class="row">
                 <div class="col-xs-12">
-                    <button class="btn btn-success" type="submit">Save</button>
-                    <button class="btn btn-danger" type="button">Cancel</button>
+                    <button class="btn btn-success" type="submit" [disabled]="!editRecipeForm.valid">Save</button>
+                    <button class="btn btn-danger" type="button" (click)="onCancelEdit()">Cancel</button>
                 </div>
             </div>
             <div class="row">
                 <div class="col-xs-12">
                     <div class="form-group">
                         <label for="name">Name</label>
-                        <input type="text" name="nameRecipe" id="" class="form-control" formControlName="nameRecipe">
+                        <input type="text" name="nameRecipe" id="" class="form-control" formControlName="name">
                     </div>
                 </div>
             </div>
@@ -19,7 +19,7 @@
                 <div class="col-xs-12">
                     <div class="form-group">
                         <label for="imagePath">Image path</label>
-                        <input type="text" id="imagePath" class="form-control" formControlName="imgPathRecipe"
+                        <input type="text" id="imagePath" class="form-control" formControlName="imagePath"
                             #imgPathRecipeRef>
                     </div>
                 </div>
@@ -34,15 +34,14 @@
                     <div class="form-group">
                         <label for="description">Description</label>
                         <textarea name="description" id="" cols="30" rows="6" class="form-control"
-                            formControlName="descriptionRecipe"></textarea>
+                            formControlName="description"></textarea>
                     </div>
                 </div>
             </div>
             <div class="row" formArrayName="ingredients">
                 <div class="col-xs-12">
-                    
-                    <div class="row" *ngFor="let ingredientsControls of getIngredientsControls(); let i = index" formGroupName="i">
-
+                    <div class="row" *ngFor="let ingredientsControl of getIngredientsControls(); let i = index"
+                        [formGroupName]="i" style="margin-top: 10px;">
                         <div class="col-xs-8">
                             <input type="text" class="form-control" formControlName="name">
                         </div>
@@ -50,9 +49,15 @@
                             <input type="number" class="form-control" formControlName="amount">
                         </div>
                         <div class="col-xs-2">
-                            <button class="btn btn-danger" type="button">X</button>
+                            <button class="btn btn-danger" type="button" (click)="onDeleteIngredient(i)">X</button>
                         </div>
                     </div>
+
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-12">
+                    <button class="btn btn-primary" type="button" (click)="onAddIngredient()">Add ingredient</button>
                 </div>
             </div>
         </form>

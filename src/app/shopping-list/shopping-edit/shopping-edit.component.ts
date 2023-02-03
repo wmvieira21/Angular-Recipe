@@ -1,5 +1,6 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
+import { Subscription } from 'rxjs';
 import { Ingredient } from 'src/app/shared/ingredient.module';
 import { ShoppingListService } from '../shopping-list.service';
 
@@ -8,18 +9,19 @@ import { ShoppingListService } from '../shopping-list.service';
   templateUrl: './shopping-edit.component.html',
   styleUrls: ['./shopping-edit.component.css']
 })
-export class ShoppingEditComponent implements OnInit {
+export class ShoppingEditComponent implements OnInit, OnDestroy {
   //@Output('addIngredientParent') addIngredientParent = new EventEmitter<Ingredient>();
   //@ViewChild('amountIngredientInput') amountIngredientInput: ElementRef;
   @ViewChild('refFormShoppingEdit') refFormShoppingEdit: NgForm;
 
   editMode = false;
   indexIngredientEdit = null;
+  ingredientEditSubs: Subscription;
 
   constructor(private shoppingListService: ShoppingListService) { }
 
   ngOnInit(): void {
-    this.shoppingListService.ingredientEdit.subscribe((indexParam) => {
+    this.ingredientEditSubs = this.shoppingListService.ingredientEdit.subscribe((indexParam) => {
       const ingredient = this.shoppingListService.getIngredient(indexParam);
       this.editMode = true;
       this.indexIngredientEdit = indexParam;
@@ -55,5 +57,9 @@ export class ShoppingEditComponent implements OnInit {
   onClear() {
     this.editMode = false;
     this.refFormShoppingEdit.reset();
+  }
+  
+  ngOnDestroy(): void {
+    this.ingredientEditSubs.unsubscribe();
   }
 }

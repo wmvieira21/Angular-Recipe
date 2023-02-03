@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
-import { FormArray, FormControl, FormGroup, NgForm } from '@angular/forms';
-import { ActivatedRoute, Params } from '@angular/router';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { FormArray, FormControl, FormGroup, NgForm, Validators } from '@angular/forms';
+import { ActivatedRoute, Params, Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 import { RecipeService } from '../recipe.service';
 
 @Component({
@@ -8,13 +9,14 @@ import { RecipeService } from '../recipe.service';
   templateUrl: './recipe-edit.component.html',
   styleUrls: ['./recipe-edit.component.css']
 })
-export class RecipeEditComponent implements OnInit {
+export class RecipeEditComponent implements OnInit, OnDestroy {
 
   id: number;
   editMode = false;
   editRecipeForm: FormGroup;
+  ingredientsFormArray = new FormArray([]);
 
-  constructor(private route: ActivatedRoute, private recipeService: RecipeService) { }
+  constructor(private route: ActivatedRoute, private recipeService: RecipeService, private router: Router) { }
 
 
   ngOnInit(): void {
@@ -24,11 +26,11 @@ export class RecipeEditComponent implements OnInit {
       this.initForm(this.id);
     });
   }
+
   initForm(id: number) {
     let name;
     let img;
     let desc;
-    let ingredientsFormArray: FormArray;
 
     if (this.editMode) {
       const recipe = this.recipeService.getRecipeById(id);
@@ -36,26 +38,62 @@ export class RecipeEditComponent implements OnInit {
       img = recipe.imagePath;
       desc = recipe.description;
 
-      recipe.ingredients.forEach((ingredient) => {
-        ingredientsFormArray.push(new FormGroup({
-          'name': new FormControl(ingredient.name),
-          'amount': new FormControl(ingredient.amount)
-        }));
-      })
+      if (recipe['ingredients']) {
+        recipe.ingredients.forEach((ingredient) => {
+          this.ingredientsFormArray.push(new FormGroup({
+            'name': new FormControl(ingredient.name, Validators.required),
+            'amount': new FormControl(ingredient.amount, [Validators.required, Validators.pattern(/^[1-9]+[0-9]*$/)])
+          }));
+        })
+      }
     };
 
     this.editRecipeForm = new FormGroup({
-      'nameRecipe': new FormControl(name),
-      'imgPathRecipe': new FormControl(img),
-      'descriptionRecipe': new FormControl(desc),
-      'ingredients': ingredientsFormArray
+      'name': new FormControl(name, Validators.required),
+      'imagePath': new FormControl(img, Validators.required),
+      'description': new FormControl(desc, Validators.required),
+      'ingredients': this.ingredientsFormArray
     })
   }
+
   onSubmit() {
-    console.log(this.editRecipeForm);
+    console.log(this.editRecipeForm.value);
+    /*It's possible to pass directily this.editRecipeForm.value,
+    since the controlers have the same format and name as the recipe module
+    
+    public name : String;
+    public description : String;
+    public imagePath : String;
+    public ingredients: Ingredient[];
+    */
+
+    if (this.editMode) {
+      this.recipeService.updateRecipe(this.id, this.editRecipeForm.value);
+    } else {
+      this.recipeService.addRecipe(this.editRecipeForm.value);
+    }
+
+    this.onCancelEdit();
   }
 
   getIngredientsControls() {
     return (<FormArray>this.editRecipeForm.get('ingredients')).controls;
+  }
+
+  onAddIngredient() {
+    (<FormArray>this.editRecipeForm.get('ingredients')).push(new FormGroup({
+      'name': new FormControl(null, Validators.required),
+      'amount': new FormControl(null, [Validators.required, Validators.pattern(/^[1-9]+[0-9]*$/)])
+    }));
+  }
+  onCancelEdit() {
+    this.router.navigate(['../'], { relativeTo: this.route });
+  }
+
+  onDeleteIngredient(index: number) {
+    (<FormArray>this.editRecipeForm.get('ingredients')).removeAt(index);
+  }
+
+  ngOnDestroy(): void {
   }
 }
