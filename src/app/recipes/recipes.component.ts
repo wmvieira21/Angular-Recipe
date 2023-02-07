@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { DataStorageService } from '../shared/data-storage.service';
 import { Recipe } from './recipe.module';
 import { RecipeService } from './recipe.service';
 
@@ -10,7 +11,7 @@ import { RecipeService } from './recipe.service';
 export class RecipesComponent implements OnInit {
   recipe: Recipe;
 
-  constructor(private recipeService: RecipeService) { }
+  constructor(private recipeService: RecipeService, private dataStoraged: DataStorageService) { }
 
   ngOnInit(): void {
     /*No longer neded since we're using routing now
