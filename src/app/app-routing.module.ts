@@ -1,5 +1,6 @@
 import { NgModule } from "@angular/core";
 import { Routes, RouterModule } from "@angular/router";
+import { AuthComponent } from "./auth/auth.component";
 import { ErrorComponent } from "./error/error.component";
 import { NoneItemSelectedComponent } from "./recipes/none-item-selected/none-item-selected.component";
 import { RecipeDetailComponent } from "./recipes/recipe-detail/recipe-detail.component";
@@ -25,6 +26,9 @@ const appRouter: Routes = [
     {
         path: 'shopping-list/edit', component: ShoppingListComponent
     },
+    { path: 'auth', component: AuthComponent },
+
+
     { path: 'not-found', component: ErrorComponent, data: { messageError: 'Page not found' } },
     { path: '**', redirectTo: '/not-found' }
 ];
