@@ -1,46 +1,71 @@
 import { Injectable } from "@angular/core";
-import { HttpClient } from "@angular/common/http";
-import { catchError, Observable, throwError } from "rxjs";
+import { HttpClient, HttpErrorResponse } from "@angular/common/http";
+import { catchError, Observable, Subject, tap, throwError } from "rxjs";
+import { User } from "./user.model";
 
-interface AuthResponse {
+export interface AuthResponse {
     idToken: string;
     email: string;
     refreshToken: string;
     expireIn: string;
     localId: string;
+    registered?: boolean;
 }
 
 @Injectable({ providedIn: 'root' })
 
 export class AuthService {
 
-    signInURL = "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyCESnKP81cPyXVKCbbeRSbZxrX-73J3jYU";
+    signUpURL = "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyCESnKP81cPyXVKCbbeRSbZxrX-73J3jYU";
+    signInURL = "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyCESnKP81cPyXVKCbbeRSbZxrX-73J3jYU";
+    user = new Subject();
 
     constructor(private http: HttpClient) { }
 
     signUp(email: string, password: string): Observable<AuthResponse> {
-        return this.http.post<AuthResponse>(this.signInURL,
+        return this.http.post<AuthResponse>(this.signUpURL,
             {
                 email: email,
                 password: password,
                 returnSecureToken: true
             }
-        ).pipe(catchError((erroResponse) => {
-            let errorMessage = '';
+        ).pipe(catchError(this.handleErrors), tap(data => {
+            const expirationDate = new Date(new Date().getTime() + (+data.expireIn * 1000));
+            const user = new User(data.email, data.localId, data.idToken, expirationDate);
+        }))
+    };
 
-            if (erroResponse.error
-                && erroResponse.error.error
-                && erroResponse.error['error'].message) {
-                switch (erroResponse.error['error'].message) {
-                    case 'EMAIL_EXISTS':
-                        errorMessage = 'This email is already registered';
-                        break;
-                    default:
-                        errorMessage = erroResponse.error['error'].message;
-                        break;
-                }
-                return throwError(() => new Error(errorMessage));
-            }
+    signIn(emailParam: string, passwordParam: string): Observable<AuthResponse> {
+        return this.http.post<AuthResponse>(this.signInURL, {
+            email: emailParam,
+            password: passwordParam,
+            returnSecureToken: true
+        }).pipe(catchError(this.handleErrors), tap(data => {
+
         }));
+    }
+
+    handleErrors(erroResponse: HttpErrorResponse) {
+        let errorMessage = '';
+
+        if (erroResponse.error
+            && erroResponse.error.error
+            && erroResponse.error['error'].message) {
+            switch (erroResponse.error['error'].message) {
+                case 'EMAIL_EXISTS':
+                    errorMessage = 'This email is already registered';
+                    break;
+                case 'EMAIL_NOT_FOUND':
+                    errorMessage = 'Email invalid';
+                    break;
+                case 'INVALID_PASSWORD':
+                    errorMessage = 'Password invalid';
+                    break;
+                default:
+                    errorMessage = erroResponse.error['error'].message;
+                    break;
+            }
+            return throwError(() => new Error(errorMessage));
+        }
     }
 }
