@@ -1,24 +1,33 @@
 <div class="container">
     <div class="row">
         <div class="col-xs-12 col-md-6 col-md-offse-3">
-            <form (ngSubmit)="onSubmitForm(formRef)" #formRef="ngForm">
-                
+
+            <div *ngIf="error" class="alert alert-danger">
+                <strong>{{error}}</strong>
+            </div>
+
+            <div *ngIf="isLoading" style="text-align: center;" class="app-spinner"></div>
+
+            <form (ngSubmit)="onSubmitForm(formRef)" #formRef="ngForm" *ngIf="!isLoading">
                 <div class="form-group">
                     <label for="email">Email</label>
-                    <input type="email" id="email" class="form-control" name="email" ngModel required email>
+                    <input type="email" id="email" class="form-control" (click)="onEmailFocused()" name="email" ngModel required email>
                 </div>
-                
+
                 <div class="form-group">
                     <label for="password">Password</label>
-                    <input type="password" id="password" class="form-control" name="password" ngModel required minlength="6">
+                    <input type="password" id="password" class="form-control" name="password" ngModel required
+                        minlength="6">
                 </div>
-                
+
                 <div class="form-group">
-                    <button type="submit" class="btn btn-primary" [disabled]="!formRef.valid">{{isSignUpMode ? 'Sign Up' : 'Log in'}}</button>
+                    <button type="submit" class="btn btn-primary" [disabled]="!formRef.valid">{{isSignUpMode ? 'Sign Up'
+                        : 'Log in'}}</button>
                 </div>
-                
+
                 <div class="form-group">
-                    <button type="button" class="btn btn-primary" (click)="onSwitchButton()">Switch to {{isSignUpMode ? 'Log in' :
+                    <button type="button" class="btn btn-primary" (click)="onSwitchButton()">Switch to {{isSignUpMode ?
+                        'Log in' :
                         'Sign Up' }}</button>
                 </div>
             </form>
