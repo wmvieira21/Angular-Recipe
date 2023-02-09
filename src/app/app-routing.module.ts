@@ -10,7 +10,7 @@ import { RecipesComponent } from "./recipes/recipes.component";
 import { ShoppingListComponent } from "./shopping-list/shopping-list.component";
 
 const appRouter: Routes = [
-    { path: '', redirectTo: '/recipes', pathMatch: 'full' },
+    { path: '', redirectTo: '/auth', pathMatch: 'full' },
     {
         path: 'recipes', component: RecipesComponent, children: [
             { path: '', component: NoneItemSelectedComponent },

@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { HttpClient, HttpErrorResponse } from "@angular/common/http";
-import { catchError, Observable, Subject, tap, throwError } from "rxjs";
+import { BehaviorSubject, catchError, Observable, Subject, tap, throwError } from "rxjs";
 import { User } from "./user.model";
 
 export interface AuthResponse {
@@ -18,7 +18,11 @@ export class AuthService {
 
     signUpURL = "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyCESnKP81cPyXVKCbbeRSbZxrX-73J3jYU";
     signInURL = "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyCESnKP81cPyXVKCbbeRSbZxrX-73J3jYU";
-    userObservable = new Subject();
+
+    /*BehaviorSubject works as the same as a Subjet, we can use next e subscribe to it.
+    Even before subscribing to the userObservable, it gives us acess to the previosily emitted user.
+    */
+    userObservable = new BehaviorSubject<User>(null);
 
     constructor(private http: HttpClient) { }
 
