@@ -1,6 +1,7 @@
 import { NgFor } from "@angular/common";
 import { Component } from "@angular/core";
 import { NgForm } from "@angular/forms";
+import { Router } from "@angular/router";
 import { Observable, Subject } from "rxjs";
 import { AuthService } from "./auth.service";
 import { AuthResponse } from "./auth.service";
@@ -15,9 +16,9 @@ export class AuthComponent {
     isSignUpMode = true;
     isLoading = false;
     error: string = '';
-    
 
-    constructor(private authService: AuthService) { }
+
+    constructor(private authService: AuthService, private router: Router) { }
 
     onSwitchButton() {
         this.isSignUpMode = !this.isSignUpMode;
@@ -37,6 +38,7 @@ export class AuthComponent {
             next: (dataResponse) => {
                 console.log(dataResponse);
                 this.isLoading = false;
+                this.router.navigate(['recipes']);
             },
             error: (erroResponse) => {
                 console.log(erroResponse);

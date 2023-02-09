@@ -7,7 +7,7 @@ export interface AuthResponse {
     idToken: string;
     email: string;
     refreshToken: string;
-    expireIn: string;
+    expiresIn: string;
     localId: string;
     registered?: boolean;
 }
@@ -18,7 +18,7 @@ export class AuthService {
 
     signUpURL = "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyCESnKP81cPyXVKCbbeRSbZxrX-73J3jYU";
     signInURL = "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyCESnKP81cPyXVKCbbeRSbZxrX-73J3jYU";
-    user = new Subject();
+    userObservable = new Subject();
 
     constructor(private http: HttpClient) { }
 
@@ -30,8 +30,7 @@ export class AuthService {
                 returnSecureToken: true
             }
         ).pipe(catchError(this.handleErrors), tap(data => {
-            const expirationDate = new Date(new Date().getTime() + (+data.expireIn * 1000));
-            const user = new User(data.email, data.localId, data.idToken, expirationDate);
+            this.handleAuthtentication(data.email, data.localId, data.idToken, +data.expiresIn);
         }))
     };
 
@@ -41,7 +40,7 @@ export class AuthService {
             password: passwordParam,
             returnSecureToken: true
         }).pipe(catchError(this.handleErrors), tap(data => {
-
+            this.handleAuthtentication(data.email, data.localId, data.idToken, +data.expiresIn);
         }));
     }
 
@@ -67,5 +66,10 @@ export class AuthService {
             }
             return throwError(() => new Error(errorMessage));
         }
+    }
+    private handleAuthtentication(email: string, localId: string, idToken: string, expiresIn: number) {
+        const expirationDate = new Date(new Date().getTime() + (+expiresIn * 1000));
+        const user = new User(email, localId, idToken, expirationDate);
+        this.userObservable.next(user);
     }
 }
