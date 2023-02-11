@@ -12,7 +12,7 @@ export class RecipeRessolverService implements Resolve<Recipe[]>{
     constructor(private dataStorage: DataStorageService, private recipeService: RecipeService) { }
 
     resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Recipe[] | Observable<Recipe[]> | Promise<Recipe[]> {
-        /*It's not necessaire to subscrite to the observabel getStoragedData. The ressolve gard will be doing that.
+        /*It's not necessairy to subscrite to the observabel getStoragedData. The ressolve gard will be doing that.
         
         IMPORTANT: This guard is essencial to featch the data whenever we load 
         the pages (http://localhost:4200/recipes/4 or http://localhost:4200/recipes/4/edit) again*/

@@ -34,6 +34,11 @@ export class HeaderComponent implements OnInit, OnDestroy {
     onFeatchData() {
         this.fetachDataSub = this.dataStorage.getStoragedData().subscribe();
     }
+
+    logout() {
+        this.authService.onLogout();
+    }
+
     ngOnDestroy(): void {
         this.fetachDataSub.unsubscribe();
     }

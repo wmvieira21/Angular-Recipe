@@ -2,6 +2,7 @@ import { Injectable } from "@angular/core";
 import { HttpClient, HttpErrorResponse } from "@angular/common/http";
 import { BehaviorSubject, catchError, Observable, Subject, tap, throwError } from "rxjs";
 import { User } from "./user.model";
+import { Router } from "@angular/router";
 
 export interface AuthResponse {
     idToken: string;
@@ -23,8 +24,9 @@ export class AuthService {
     Even before subscribing to the userObservable, it gives us acess to the previosily emitted user.
     */
     userObservable = new BehaviorSubject<User>(null);
+    private expirationDateTimer: any;
 
-    constructor(private http: HttpClient) { }
+    constructor(private http: HttpClient, private router: Router) { }
 
     signUp(email: string, password: string): Observable<AuthResponse> {
         return this.http.post<AuthResponse>(this.signUpURL,
@@ -75,5 +77,41 @@ export class AuthService {
         const expirationDate = new Date(new Date().getTime() + (+expiresIn * 1000));
         const user = new User(email, localId, idToken, expirationDate);
         this.userObservable.next(user);
+        this.autoLogout(expiresIn * 1000);
+
+        /*localStorage is a API provided by the browser where we can storage simple key value pairs*/
+        localStorage.setItem('userData', JSON.stringify(user));
+    }
+
+    onLogout() {
+        this.userObservable.next(null);
+        this.router.navigate(['/auth']);
+        localStorage.removeItem('userData');
+
+        if (!this.expirationDateTimer) {
+            clearTimeout(this.expirationDateTimer);
+        }
+        this.expirationDateTimer = null;
+    }
+
+    autoLoging() {
+        const userData = JSON.parse(localStorage.getItem('userData'));
+
+        if (!userData) {
+            return null;
+        }
+        const userLoaded = new User(userData.email, userData.localId, userData._token, new Date(userData._tokenExpirationDate));
+        if (userLoaded.token) {
+            this.userObservable.next(userLoaded);
+            const expirationDateDuration = (new Date(userData._tokenExpirationDate).getTime() - new Date().getTime());
+            this.autoLogout(expirationDateDuration);
+        }
+    }
+
+    autoLogout(expirationDateMiliseconds: number) {
+        console.log(expirationDateMiliseconds);
+        this.expirationDateTimer = setTimeout(() => {
+            this.onLogout();
+        }, expirationDateMiliseconds);
     }
 }
