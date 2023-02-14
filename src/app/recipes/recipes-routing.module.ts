@@ -9,6 +9,10 @@ import { RecipeRessolverService } from "./recipe-ressolver.service";
 import { RecipesComponent } from "./recipes.component";
 
 const appRoutes: Routes = [{
+    /*When using Lazy loading the recipes route will be defined at the main routing file (AppRoutingModule).
+    Here in the child routes the main route should be '' */
+    
+    //path: 'recipes', component: RecipesComponent, canActivate: [AuthGuard], children: [
     path: '', component: RecipesComponent, canActivate: [AuthGuard], children: [
         { path: '', component: NoneItemSelectedComponent },
         { path: 'new', component: RecipeEditComponent },

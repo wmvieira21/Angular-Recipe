@@ -40,7 +40,7 @@
             </div>
             <div class="row" formArrayName="ingredients">
                 <div class="col-xs-12">
-                    <div class="row" *ngFor="let ingredientsControl of getIngredientsControls(); let i = index"
+                    <div class="row" *ngFor="let ingredientsControl of getIngredientsControls; let i = index"
                         [formGroupName]="i" style="margin-top: 10px;">
                         <div class="col-xs-8">
                             <input type="text" class="form-control" formControlName="name">
