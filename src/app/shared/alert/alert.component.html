@@ -1,0 +1,11 @@
+<!--backdrop it'll block the backgroup and make sure that the focus is on this html alert box
+
+Custom class..None of them is a boostrap class, but btn btn-primary-->
+
+<div class="backdrop" (click)="onclose()"></div>
+<div class="alert-box">
+    <p>{{message}}</p>
+    <div class="alert-block-actions">
+        <button class="btn btn-primary" (click)="onclose()">Close</button>
+    </div>
+</div>

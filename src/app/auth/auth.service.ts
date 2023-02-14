@@ -105,6 +105,8 @@ export class AuthService {
             this.userObservable.next(userLoaded);
             const expirationDateDuration = (new Date(userData._tokenExpirationDate).getTime() - new Date().getTime());
             this.autoLogout(expirationDateDuration);
+        } else {
+            this.onLogout();
         }
     }
 

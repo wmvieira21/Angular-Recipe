@@ -1,17 +1,26 @@
+<!--Alternative way
+<ng-template appPlaceHolder></ng-template>
+-->
+
 <div class="container">
     <div class="row">
         <div class="col-xs-12 col-md-6 col-md-offse-3">
 
+
+            <!--it'll be replaced by my new alert-box component
             <div *ngIf="error" class="alert alert-danger">
                 <strong>{{error}}</strong>
             </div>
+            -->
+            <app-alert [message]="error" *ngIf="error" (closeEventEmitter)="onHandlingErrorAlert()"></app-alert>
 
             <div *ngIf="isLoading" style="text-align: center;" class="app-spinner"></div>
 
             <form (ngSubmit)="onSubmitForm(formRef)" #formRef="ngForm" *ngIf="!isLoading">
                 <div class="form-group">
-                    <label for="email">Email</label>
-                    <input type="email" id="email" class="form-control" (click)="onEmailFocused()" name="email" ngModel required email>
+                    <label for="email" #ais>Email</label>
+                    <input type="email" id="email" class="form-control" (click)="onEmailFocused()" name="email" ngModel
+                        required email>
                 </div>
 
                 <div class="form-group">
