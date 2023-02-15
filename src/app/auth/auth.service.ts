@@ -3,6 +3,7 @@ import { HttpClient, HttpErrorResponse } from "@angular/common/http";
 import { BehaviorSubject, catchError, Observable, Subject, tap, throwError } from "rxjs";
 import { User } from "./user.model";
 import { Router } from "@angular/router";
+import { environment } from "src/environments/environment";
 
 export interface AuthResponse {
     idToken: string;
@@ -17,8 +18,8 @@ export interface AuthResponse {
 
 export class AuthService {
 
-    signUpURL = "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyCESnKP81cPyXVKCbbeRSbZxrX-73J3jYU";
-    signInURL = "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyCESnKP81cPyXVKCbbeRSbZxrX-73J3jYU";
+    signUpURL = "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=" + environment.apiFirebaseKey;
+    signInURL = "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=" + environment.apiFirebaseKey;
 
     /*BehaviorSubject works as the same as a Subjet, we can use next e subscribe to it.
     Even before subscribing to the userObservable, it gives us acess to the previosily emitted user.
