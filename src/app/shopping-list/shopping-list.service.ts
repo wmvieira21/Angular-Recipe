@@ -1,4 +1,5 @@
 import { EventEmitter } from "@angular/core";
+import { Store } from "@ngrx/store";
 import { Subject } from "rxjs";
 import { Recipe } from "../recipes/recipe.module";
 import { Ingredient } from "../shared/ingredient.module";
@@ -9,6 +10,8 @@ export class ShoppingListService {
     ingredientEdit = new Subject<number>();
 
     private ingredients: Ingredient[] = [];
+
+    constructor(private store: Store<{ shoppingList: { ingredients: Ingredient[] } }>) { }
 
     getIngredients() {
         return this.ingredients.slice();
@@ -27,8 +30,8 @@ export class ShoppingListService {
         /*recipe.ingredients.forEach((ingredient) => {
             this.ingredients.push(ingredient);
         });*/
-        this.ingredients.push(...recipe.ingredients);
-        this.ingredientsChanged.next(this.ingredients.slice());
+        //this.ingredients.push(...recipe.ingredients);
+        //this.ingredientsChanged.next(this.ingredients.slice());
     }
 
     updateIngredient(index: number, newIngredient: Ingredient) {
@@ -39,7 +42,7 @@ export class ShoppingListService {
     deleteIngredient(index: number) {
         console.log("index=" + index);
         console.log(this.ingredients)
-        this.ingredients.splice(index,1);
+        this.ingredients.splice(index, 1);
         console.log(this.ingredients)
         this.ingredientsChanged.next(this.ingredients.slice());
     }
