@@ -1,9 +1,16 @@
+<!--With NRGX ingredients become an Observable.
+    We can explores the pipe async of Angular.
+    (ingredients | async).ingredients
+    It'll subscribe to the Obervable and resolve returning the data, 
+    which is an array of Ingredient.-->
+
 <div class="row">
     <div class="col-xs-10">
         <app-shopping-edit></app-shopping-edit>
         <hr>
         <ul class="list-group">
-            <a class="list-group-item" style="cursor: pointer" *ngFor="let ingredient of ingredients; let i = index"
+            <a class="list-group-item" style="cursor: pointer"
+                *ngFor="let ingredient of (ingredients | async).ingredients let i = index"
                 (click)="onEditIngredient(i)">
                 {{ingredient.name}} ({{ingredient.amount}})
             </a>

@@ -1,5 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Subscription } from 'rxjs';
+import { Store } from '@ngrx/store';
+import { Observable, Subscription } from 'rxjs';
 import { Ingredient } from "../shared/ingredient.module";
 import { ShoppingListService } from './shopping-list.service';
 
@@ -9,17 +10,23 @@ import { ShoppingListService } from './shopping-list.service';
   styleUrls: ['./shopping-list.component.css']
 })
 export class ShoppingListComponent implements OnInit, OnDestroy {
-  ingredients: Ingredient[];
-  ingredientsChanged: Subscription;
+  ingredients: Observable<{ ingredients: Ingredient[] }>;
+  //ingredientsChanged: Subscription;
 
-  constructor(private shoppingListService: ShoppingListService) { }
+  constructor(private shoppingListService: ShoppingListService,
+    private store: Store<{ shoppingList: { ingredients: Ingredient[] } }>) { }
 
   ngOnInit(): void {
+    /*NGRX, As we dispatch new data from edti-component, it'll be displyed here automaticly, 
+    since this.store.select('shoppingList') is and Observable and the ngrx itself will handle and subscribe.*/
+    this.ingredients = this.store.select('shoppingList');
+
+    /*No longer necessary since we're using NGRX
     this.ingredients = this.shoppingListService.getIngredients();
 
     this.ingredientsChanged = this.shoppingListService.ingredientsChanged.subscribe((ingredients: Ingredient[]) => {
       this.ingredients = ingredients;
-    });
+    });*/
   }
 
   onEditIngredient(index: number) {
@@ -27,6 +34,6 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
   }
   
   ngOnDestroy(): void {
-    this.ingredientsChanged.unsubscribe();
+    //this.ingredientsChanged.unsubscribe();
   }
 }
