@@ -1,5 +1,5 @@
 import { NgFor } from "@angular/common";
-import { Component, ComponentFactory, ComponentFactoryResolver, OnDestroy, ViewChild } from "@angular/core";
+import { Component, ComponentFactory, ComponentFactoryResolver, OnDestroy, OnInit, ViewChild } from "@angular/core";
 import { NgForm } from "@angular/forms";
 import { Router } from "@angular/router";
 import { Observable, Subject, Subscription } from "rxjs";
@@ -7,13 +7,16 @@ import { AlertBox } from "../shared/alert/alert.component";
 import { PlaceHolderDirective } from "../shared/placeholder/placeholder.directive";
 import { AuthService } from "./auth.service";
 import { AuthResponse } from "./auth.service";
+import { Store } from "@ngrx/store";
+import * as fromAppReducer from '../store/app.reducer';
+import * as fromAuthActions from './store/auth.actions';
 
 @Component({
     selector: 'app-auth',
     templateUrl: './auth.component.html'
 })
 
-export class AuthComponent implements OnDestroy {
+export class AuthComponent implements OnInit, OnDestroy {
 
     isSignUpMode = true;
     isLoading = false;
@@ -27,23 +30,63 @@ export class AuthComponent implements OnDestroy {
     closeSubscription: Subscription;
 
 
-    constructor(private authService: AuthService, private router: Router, private componentFactoryRessolver: ComponentFactoryResolver) { }
+    constructor(private authService: AuthService, private router: Router, private componentFactoryRessolver: ComponentFactoryResolver,
+        private store: Store<fromAppReducer.AppState>) { }
+
+    ngOnInit(): void {
+        this.store.select('auth').subscribe(authStare => {
+            this.isLoading = authStare.isLoadingAuth;
+            this.error = authStare.loginError;
+        });
+    }
 
     onSwitchButton() {
         this.isSignUpMode = !this.isSignUpMode;
     }
 
+    /* onSubmitForm(form: NgForm) {
+         this.isLoading = true;
+         let authObservable: Observable<AuthResponse>;
+ 
+         if (this.isSignUpMode) {
+             authObservable = this.authService.signUp(form.value['email'], form.value['password']);
+         } else {
+             authObservable = this.authService.signIn(form.value['email'], form.value['password']);
+         }
+ 
+         authObservable.subscribe({
+             next: (dataResponse) => {
+                 console.log(dataResponse);
+                 this.isLoading = false;
+                 this.router.navigate(['recipes']);
+             },
+             error: (erroResponse) => {
+                 console.log(erroResponse);
+                 this.error = erroResponse;
+                 this.isLoading = false;
+                 //Alternative way
+                 //this.showErrorAlert(erroResponse);
+                 
+             }
+         });
+         form.reset();
+     }*/
+
+    //NGRX
     onSubmitForm(form: NgForm) {
         this.isLoading = true;
         let authObservable: Observable<AuthResponse>;
 
         if (this.isSignUpMode) {
             authObservable = this.authService.signUp(form.value['email'], form.value['password']);
+
         } else {
-            authObservable = this.authService.signIn(form.value['email'], form.value['password']);
+            //authObservable = this.authService.signIn(form.value['email'], form.value['password']);
+            this.store.dispatch(new fromAuthActions.StartLogin({ email: form.value['email'], password: form.value['password'] }))
         }
 
-        authObservable.subscribe({
+
+        /*authObservable.subscribe({
             next: (dataResponse) => {
                 console.log(dataResponse);
                 this.isLoading = false;
@@ -53,11 +96,11 @@ export class AuthComponent implements OnDestroy {
                 console.log(erroResponse);
                 this.error = erroResponse;
                 this.isLoading = false;
-                /*Alternative way
-                this.showErrorAlert(erroResponse);
-                */
+                //Alternative way
+                //this.showErrorAlert(erroResponse);
+
             }
-        });
+        });*/
         form.reset();
     }
 

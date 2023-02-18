@@ -4,6 +4,9 @@ import { BehaviorSubject, catchError, Observable, Subject, tap, throwError } fro
 import { User } from "./user.model";
 import { Router } from "@angular/router";
 import { environment } from "src/environments/environment";
+import { Store } from "@ngrx/store";
+import * as fromAppReducer from '../store/app.reducer';
+import * as fromAuthActions from './store/auth.actions';
 
 export interface AuthResponse {
     idToken: string;
@@ -24,10 +27,11 @@ export class AuthService {
     /*BehaviorSubject works as the same as a Subjet, we can use next e subscribe to it.
     Even before subscribing to the userObservable, it gives us acess to the previosily emitted user.
     */
-    userObservable = new BehaviorSubject<User>(null);
+    //userObservable = new BehaviorSubject<User>(null);
     private expirationDateTimer: any;
 
-    constructor(private http: HttpClient, private router: Router) { }
+    constructor(private http: HttpClient, private router: Router,
+        private store: Store<fromAppReducer.AppState>) { }
 
     signUp(email: string, password: string): Observable<AuthResponse> {
         return this.http.post<AuthResponse>(this.signUpURL,
@@ -77,7 +81,11 @@ export class AuthService {
     private handleAuthtentication(email: string, localId: string, idToken: string, expiresIn: number) {
         const expirationDate = new Date(new Date().getTime() + (+expiresIn * 1000));
         const user = new User(email, localId, idToken, expirationDate);
-        this.userObservable.next(user);
+
+        //this.userObservable.next(user);
+        //NGRX
+        this.store.dispatch(new fromAuthActions.Logging({ email: email, userId: localId, token: idToken, expirationDate: expirationDate }));
+
         this.autoLogout(expiresIn * 1000);
 
         /*localStorage is a API provided by the browser where we can storage simple key value pairs*/
@@ -85,7 +93,10 @@ export class AuthService {
     }
 
     onLogout() {
-        this.userObservable.next(null);
+        //this.userObservable.next(null);
+        //NGRX
+        this.store.dispatch(new fromAuthActions.Logout());
+
         this.router.navigate(['/auth']);
         localStorage.removeItem('userData');
 
@@ -103,7 +114,13 @@ export class AuthService {
         }
         const userLoaded = new User(userData.email, userData.localId, userData._token, new Date(userData._tokenExpirationDate));
         if (userLoaded.token) {
-            this.userObservable.next(userLoaded);
+            //this.userObservable.next(userLoaded);
+            //NGRX
+            this.store.dispatch(new fromAuthActions.Logging({
+                email: userLoaded.email,
+                userId: userLoaded.localId, token: userLoaded.token, expirationDate: userLoaded.tokenExpirationDate
+            }));
+
             const expirationDateDuration = (new Date(userData._tokenExpirationDate).getTime() - new Date().getTime());
             this.autoLogout(expirationDateDuration);
         } else {

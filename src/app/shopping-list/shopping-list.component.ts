@@ -3,6 +3,8 @@ import { Store } from '@ngrx/store';
 import { Observable, Subscription } from 'rxjs';
 import { Ingredient } from "../shared/ingredient.module";
 import { ShoppingListService } from './shopping-list.service';
+import * as  FromShoppingListActions from './store/shopping-list.actions';
+import * as FromAppReducer from '../store/app.reducer';
 
 @Component({
   selector: 'app-shopping-list',
@@ -14,7 +16,7 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
   //ingredientsChanged: Subscription;
 
   constructor(private shoppingListService: ShoppingListService,
-    private store: Store<{ shoppingList: { ingredients: Ingredient[] } }>) { }
+    private store: Store<FromAppReducer.AppState>) { }
 
   ngOnInit(): void {
     /*NGRX, As we dispatch new data from edti-component, it'll be displyed here automaticly, 
@@ -30,9 +32,10 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
   }
 
   onEditIngredient(index: number) {
-    this.shoppingListService.ingredientEdit.next(index);
+    //this.shoppingListService.ingredientEdit.next(index);
+    this.store.dispatch(new FromShoppingListActions.StarEditing(index));
   }
-  
+
   ngOnDestroy(): void {
     //this.ingredientsChanged.unsubscribe();
   }
