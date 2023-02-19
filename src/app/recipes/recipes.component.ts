@@ -19,4 +19,9 @@ export class RecipesComponent implements OnInit {
       this.recipe = recipe;
     })*/
   }
+  
+  get isLoading() {
+    return this.recipeService.getIsFetchingData();
+  }
+
 }

@@ -48,6 +48,7 @@ export class DataStorageService {
                 this.recipeService.setRecipes(data);
             }));
             */
+        this.recipeService.setIeFetchingData(true);
         return this.http.get<Recipe[]>(this.putUrlBackEnd).pipe(
             map(recipes => {
                 //Just in case we  featch a recipe without ingredients
@@ -58,6 +59,7 @@ export class DataStorageService {
             }),
             tap((data) => {
                 this.recipeService.setRecipes(data);
+                this.recipeService.setIeFetchingData(false);
             }));
     }
 }

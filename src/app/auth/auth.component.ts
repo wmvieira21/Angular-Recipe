@@ -74,33 +74,14 @@ export class AuthComponent implements OnInit, OnDestroy {
 
     //NGRX
     onSubmitForm(form: NgForm) {
-        this.isLoading = true;
-        let authObservable: Observable<AuthResponse>;
-
         if (this.isSignUpMode) {
-            authObservable = this.authService.signUp(form.value['email'], form.value['password']);
+            //authObservable = this.authService.signUp(form.value['email'], form.value['password']);
+            this.store.dispatch(new fromAuthActions.SignUp({ email: form.value['email'], password: form.value['password'] }));
 
         } else {
             //authObservable = this.authService.signIn(form.value['email'], form.value['password']);
             this.store.dispatch(new fromAuthActions.StartLogin({ email: form.value['email'], password: form.value['password'] }))
         }
-
-
-        /*authObservable.subscribe({
-            next: (dataResponse) => {
-                console.log(dataResponse);
-                this.isLoading = false;
-                this.router.navigate(['recipes']);
-            },
-            error: (erroResponse) => {
-                console.log(erroResponse);
-                this.error = erroResponse;
-                this.isLoading = false;
-                //Alternative way
-                //this.showErrorAlert(erroResponse);
-
-            }
-        });*/
         form.reset();
     }
 
@@ -108,7 +89,7 @@ export class AuthComponent implements OnInit, OnDestroy {
         this.error = '';
     }
     onHandlingErrorAlert() {
-        this.error = '';
+        this.store.dispatch(new fromAuthActions.ClearError());
     }
 
     /*Alternative way to show an alertbox message.

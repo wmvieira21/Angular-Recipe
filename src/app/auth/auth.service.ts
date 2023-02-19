@@ -27,7 +27,7 @@ export class AuthService {
     /*BehaviorSubject works as the same as a Subjet, we can use next e subscribe to it.
     Even before subscribing to the userObservable, it gives us acess to the previosily emitted user.
     */
-    //userObservable = new BehaviorSubject<User>(null);
+    userObservable = new BehaviorSubject<User>(null);
     private expirationDateTimer: any;
 
     constructor(private http: HttpClient, private router: Router,
@@ -86,17 +86,14 @@ export class AuthService {
         //NGRX
         this.store.dispatch(new fromAuthActions.Logging({ email: email, userId: localId, token: idToken, expirationDate: expirationDate }));
 
-        this.autoLogout(expiresIn * 1000);
+        this.setLogoutTimer(expiresIn * 1000);
 
-        /*localStorage is a API provided by the browser where we can storage simple key value pairs*/
+        //localStorage is a API provided by the browser where we can storage simple key value pairs
         localStorage.setItem('userData', JSON.stringify(user));
     }
 
     onLogout() {
-        //this.userObservable.next(null);
-        //NGRX
-        this.store.dispatch(new fromAuthActions.Logout());
-
+        this.userObservable.next(null);
         this.router.navigate(['/auth']);
         localStorage.removeItem('userData');
 
@@ -122,16 +119,23 @@ export class AuthService {
             }));
 
             const expirationDateDuration = (new Date(userData._tokenExpirationDate).getTime() - new Date().getTime());
-            this.autoLogout(expirationDateDuration);
+            this.setLogoutTimer(expirationDateDuration);
         } else {
             this.onLogout();
         }
     }
 
-    autoLogout(expirationDateMiliseconds: number) {
+    setLogoutTimer(expirationDateMiliseconds: number) {
         console.log(expirationDateMiliseconds);
         this.expirationDateTimer = setTimeout(() => {
-            this.onLogout();
+            //this.onLogout();
+            this.store.dispatch(new fromAuthActions.Logout());
         }, expirationDateMiliseconds);
+    }
+    clearTimeOut() {
+        if (!this.expirationDateTimer) {
+            clearTimeout(this.expirationDateTimer);
+            this.expirationDateTimer = null;
+        }
     }
 }

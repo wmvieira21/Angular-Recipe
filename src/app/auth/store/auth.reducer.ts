@@ -17,7 +17,6 @@ export function authRecuder(state = initialState, action: FromAuthActions.AuthAc
   switch (action.type) {
     case FromAuthActions.LOOGIN:
       const user = new User(action.payload.email, action.payload.userId, action.payload.token, action.payload.expirationDate);
-
       return {
         ...state,
         user: user,
@@ -41,6 +40,17 @@ export function authRecuder(state = initialState, action: FromAuthActions.AuthAc
         user: null,
         loginError: action.payload,
         isLoadingAuth: false
+      }
+    case FromAuthActions.SIGN_UP:
+      return {
+        ...state,
+        loginError: null,
+        isLoadingAuth: true
+      }
+    case FromAuthActions.CLEAR_ERROR:
+      return {
+        ...state,
+        loginError: null,
       }
     default:
       return {

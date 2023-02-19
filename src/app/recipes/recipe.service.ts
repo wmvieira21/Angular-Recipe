@@ -8,6 +8,7 @@ export class RecipeService {
     selectedRecipeService = new EventEmitter<Recipe>();*/
 
     recipeChanged = new Subject<Recipe[]>();
+    isFetchingData = false;
 
     private recipes: Recipe[] = [/*
         new Recipe('Nhoque', 'Nhoque good',
@@ -45,5 +46,12 @@ export class RecipeService {
     setRecipes(recipes: Recipe[]) {
         this.recipes = recipes;
         this.recipeChanged.next(this.recipes);
+    }
+
+    setIeFetchingData(loader: boolean) {
+        this.isFetchingData = loader;
+    }
+    getIsFetchingData() {
+        return this.isFetchingData;
     }
 }

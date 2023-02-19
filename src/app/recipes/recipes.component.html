@@ -1,6 +1,8 @@
-<div class="row">
+<div *ngIf="isLoading" style="text-align: center;" class="app-spinner"></div>
+
+<div class="row" *ngIf="!isLoading">
     <div class="col-md-5">
-        <app-recipe-list></app-recipe-list>
+        <app-recipe-list *ngIf="!isLoading"></app-recipe-list>
     </div>
     <div class="col-md-7">
         <!--
