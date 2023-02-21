@@ -28,13 +28,14 @@ export class AuthComponent implements OnInit, OnDestroy {
     ViweChild will search for this directive and return the first element that it finds.*/
     @ViewChild(PlaceHolderDirective) alertHost: PlaceHolderDirective;
     closeSubscription: Subscription;
+    storeSubcription: Subscription;
 
 
     constructor(private authService: AuthService, private router: Router, private componentFactoryRessolver: ComponentFactoryResolver,
         private store: Store<fromAppReducer.AppState>) { }
 
     ngOnInit(): void {
-        this.store.select('auth').subscribe(authStare => {
+        this.storeSubcription = this.store.select('auth').subscribe(authStare => {
             this.isLoading = authStare.isLoadingAuth;
             this.error = authStare.loginError;
         });
@@ -113,6 +114,9 @@ export class AuthComponent implements OnInit, OnDestroy {
     ngOnDestroy(): void {
         if (this.closeSubscription) {
             this.closeSubscription.unsubscribe();
+        }
+        if (this.storeSubcription) {
+            this.storeSubcription.unsubscribe();
         }
     }
 }

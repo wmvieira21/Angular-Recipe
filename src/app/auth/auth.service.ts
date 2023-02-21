@@ -84,7 +84,7 @@ export class AuthService {
 
         //this.userObservable.next(user);
         //NGRX
-        this.store.dispatch(new fromAuthActions.Logging({ email: email, userId: localId, token: idToken, expirationDate: expirationDate }));
+        //this.store.dispatch(new fromAuthActions.Logging({ email: email, userId: localId, token: idToken, expirationDate: expirationDate, redirect: true }));
 
         this.setLogoutTimer(expiresIn * 1000);
 
@@ -113,10 +113,11 @@ export class AuthService {
         if (userLoaded.token) {
             //this.userObservable.next(userLoaded);
             //NGRX
-            this.store.dispatch(new fromAuthActions.Logging({
+            /*this.store.dispatch(new fromAuthActions.Logging({
                 email: userLoaded.email,
-                userId: userLoaded.localId, token: userLoaded.token, expirationDate: userLoaded.tokenExpirationDate
-            }));
+                userId: userLoaded.localId, token: userLoaded.token, expirationDate: userLoaded.tokenExpirationDate,
+                redirect: false
+            }));*/
 
             const expirationDateDuration = (new Date(userData._tokenExpirationDate).getTime() - new Date().getTime());
             this.setLogoutTimer(expirationDateDuration);

@@ -4,6 +4,9 @@ import { Recipe } from "../recipes/recipe.module";
 import { RecipeService } from "../recipes/recipe.service";
 import { exhaustMap, map, Observable, take, tap } from "rxjs";
 import { AuthService } from "../auth/auth.service";
+import { Store } from '@ngrx/store';
+import * as AppReducer from '../store/app.reducer';
+import * as RecipeAtcions from '../recipes/store/recipe.actions';
 
 @Injectable({ providedIn: 'root' })
 
@@ -11,7 +14,8 @@ export class DataStorageService {
 
     private putUrlBackEnd = "https://angularhttprequest-2d9b8-default-rtdb.firebaseio.com/recipes.json";
 
-    constructor(private http: HttpClient, private recipeService: RecipeService, private authService: AuthService) { }
+    constructor(private http: HttpClient, private recipeService: RecipeService,
+        private authService: AuthService, private store: Store<AppReducer.AppState>) { }
 
     storeRecipe() {
         const recipes = this.recipeService.getRecipes();
@@ -47,6 +51,8 @@ export class DataStorageService {
             tap((data) => {
                 this.recipeService.setRecipes(data);
             }));
+            
+            Code above is not longer needed since we created a AuthInterceptor
             */
         this.recipeService.setIeFetchingData(true);
         return this.http.get<Recipe[]>(this.putUrlBackEnd).pipe(
@@ -57,8 +63,8 @@ export class DataStorageService {
                     return { ...recipe, ingredients: (recipe.ingredients ? recipe.ingredients : []) }
                 })
             }),
-            tap((data) => {
-                this.recipeService.setRecipes(data);
+            tap((recipes) => {
+                this.recipeService.setRecipes(recipes);
                 this.recipeService.setIeFetchingData(false);
             }));
     }

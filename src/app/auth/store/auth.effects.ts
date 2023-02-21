@@ -26,7 +26,8 @@ export const handleAuth = (expiresIn: number, email: string, localId: string, to
         email: email,
         userId: localId,
         token: token,
-        expirationDate: expirationDate
+        expirationDate: expirationDate,
+        redirect: true
     });
 }
 
@@ -105,8 +106,11 @@ export class AuthEffects {
 
     authSuccess = createEffect(() => this.actions$.pipe(
         ofType(AuthActions.LOOGIN),
-        tap(() => {
-            this.router.navigate(['/']);
+        tap((data: AuthActions.Logging) => {
+            
+            if (data.payload.redirect) {
+                this.router.navigate(['/']);
+            }
         })), { dispatch: false });
 
     authLogout = createEffect(() => this.actions$.pipe(
@@ -135,7 +139,10 @@ export class AuthEffects {
 
                 return new AuthActions.Logging({
                     email: userLoaded.email,
-                    userId: userLoaded.localId, token: userLoaded.token, expirationDate: userLoaded.tokenExpirationDate
+                    userId: userLoaded.localId,
+                    token: userLoaded.token,
+                    expirationDate: userLoaded.tokenExpirationDate,
+                    redirect: false
                 });
             }
             return { type: 'dummy' }

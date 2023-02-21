@@ -6,6 +6,7 @@ import { RecipeService } from '../recipes/recipe.service';
 import { DataStorageService } from '../shared/data-storage.service';
 import * as fromAppReducer from '../store/app.reducer';
 import * as fromAuthActions from '../auth/store/auth.actions';
+import * as fromRecipeActions from '../recipes/store/recipe.actions';
 
 @Component({
     selector: 'app-header',
@@ -16,6 +17,7 @@ import * as fromAuthActions from '../auth/store/auth.actions';
 export class HeaderComponent implements OnInit, OnDestroy {
     fetachDataSub: Subscription;
     isAuthenticated = false;
+    storeSubcription: Subscription;
 
     constructor(private dataStorage: DataStorageService, private recipeService: RecipeService,
         private authService: AuthService, private store: Store<fromAppReducer.AppState>) { }
@@ -27,9 +29,9 @@ export class HeaderComponent implements OnInit, OnDestroy {
             console.log(!user);
             console.log(!!user);
         });*/
-        
+
         //NGRX
-        this.store.select('auth').pipe(map(authState => authState.user)).subscribe(user => {
+        this.storeSubcription = this.store.select('auth').pipe(map(authState => authState.user)).subscribe(user => {
             this.isAuthenticated = !!user;
             console.log(user);
             console.log(!user);
@@ -38,11 +40,13 @@ export class HeaderComponent implements OnInit, OnDestroy {
     }
 
     onSaveData() {
-        this.dataStorage.storeRecipe();
+        //this.dataStorage.storeRecipe();
+        this.store.dispatch(new fromRecipeActions.SaveData());
     }
 
     onFeatchData() {
-        this.fetachDataSub = this.dataStorage.getStoragedData().subscribe();
+        //this.fetachDataSub = this.dataStorage.getStoragedData().subscribe();
+        this.store.dispatch(new fromRecipeActions.FetchData());
     }
 
     logout() {
@@ -51,7 +55,12 @@ export class HeaderComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy(): void {
-        this.fetachDataSub.unsubscribe();
+        if (this.fetachDataSub) {
+            this.fetachDataSub.unsubscribe();
+        }
+        if (this.storeSubcription) {
+            this.storeSubcription.unsubscribe();
+        }
     }
 
 }
