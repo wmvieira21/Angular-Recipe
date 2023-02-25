@@ -1,36 +1,31 @@
 Real app with Angular and firebase (as a backend solution).
 
-Simple app with a Authentication, Recipes and Shopping list pages.
+Simple app with Authentication, Recipes, and Shopping list pages.
 
-Auth page requeries an authentication by email and passwaord. It covers the most comum authencication erros, such as, invalid email/password and email not registered.
-It also deal with auto login and logout, once the session is expired (after 1hour).
+Auth page requires authentication by email and password. It covers the most comum authentication errors, such as invalid email/password and email not registered.
+It also deals with auto login and logout, once the session is expired (after 1 hour).
 
-Recipe page allows the users to register new recipes and ingredients, as well as managing them (delete, edit and add ingredients to shopping list).
+The recipe page allows the users to register new recipes and ingredients, as well as manage them (delete, edit, and add ingredients to the shopping list).
 
-Shopping list page allows the user to add/alter/delete new ingredients to the list.
+The shopping list page allows the user to add/alter/delete new ingredients to the list.
 
-Conceptes aplied:
-CustomProprieties
-Directives
-Froms (TD and Reactive)
-NGRX
-rxjs
-Gards
-Ressolver
-Interceptor
-Services
-Pipes
-Modules
-Lazy loading (optimazation)
-Observables
-Subjets
-http
-Dynamic components
-
-
-
-
-
+Concepts applied:
+CustomProprieties;
+Directives;
+Forms (TD and Reactive);
+NGRX;
+rxjs;
+Gards;
+Resolver;
+Interceptor;
+Services;
+Pipes;
+Modules;
+Lazy loading (optimization);
+Observables;
+Subjects;
+HTTP;
+Dynamic components;
 
 
 
