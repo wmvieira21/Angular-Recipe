@@ -1,5 +1,14 @@
 {
   "projects": {
     "default": "angularhttprequest-2d9b8"
+  },
+  "targets": {
+    "angularhttprequest-2d9b8": {
+      "hosting": {
+        "recipe-web-page": [
+          "angularhttprequest-2d9b8"
+        ]
+      }
+    }
   }
 }

@@ -16,7 +16,7 @@
   padding: 20px;
   z-index: 20;
   background: white;
-  box-shadow: 5px 10px #060303;
+  box-shadow: 5px 10px 5px #060303;
 }
 
 .alert-box-actions {
