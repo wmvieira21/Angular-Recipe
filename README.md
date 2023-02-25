@@ -1,4 +1,4 @@
-Real app with Angular and firebase (as a backend solution).
+Angular and firebase (as a backend solution). Developed as an exercise to practice what was learned during the course of Angular.
 
 Simple app with Authentication, Recipes, and Shopping list pages.
 
