@@ -1,4 +1,4 @@
-Angular and firebase (as a backend solution) app. Developed as an exercise to practice what was learned during the course of Angular.
+Angular and firebase (as a backend solution) app. Developed as an exercise to practice what was learned during the course of Angular. The aim was not to apply a bunch of CSS code, but to work with all Angular has to offer.
 
 Simple app with Authentication, Recipes, and Shopping list pages.
 
