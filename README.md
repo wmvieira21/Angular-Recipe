@@ -1,8 +1,8 @@
-Angular and firebase (as a backend solution) app. Developed as an exercise to practice what was learned during the course of Angular. The aim was not to apply a bunch of CSS code, but to work with all Angular has to offer.
+Angular and Firebase (as a backend solution) app. Developed as an exercise to practice what was learned during an Angular course. 
 
 Simple app with Authentication, Recipes, and Shopping list pages.
 
-Auth page requires authentication by email and password. It covers the most comum authentication errors, such as invalid email/password and email not registered.
+Auth page requires authentication by email and password. It covers the most common authentication errors, such as invalid email/password and email not registered.
 It also deals with auto login and logout, once the session is expired (after 1 hour).
 
 The recipe page allows the users to register new recipes and ingredients, as well as manage them (delete, edit, and add ingredients to the shopping list).
