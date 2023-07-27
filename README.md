@@ -1,3 +1,5 @@
+#Recipe
+
 Angular and Firebase (as a backend solution) app. Developed as an exercise to practice what was learned during an Angular course. 
 
 Simple app with Authentication, Recipes, and Shopping list pages.
@@ -9,7 +11,8 @@ The recipe page allows the users to register new recipes and ingredients, as wel
 
 The shopping list page allows the user to add/alter/delete new ingredients to the list.
 
-Concepts applied:
+
+##Concepts applied
 CustomProprieties;
 Directives;
 Forms (TD and Reactive);
